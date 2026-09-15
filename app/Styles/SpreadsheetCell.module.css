@@ -1,0 +1,26 @@
+.SpreadsheetCell {
+  border: 1px solid #d3d2d2;
+  width: 150px;
+  height: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  box-sizing: border-box;
+
+  padding: 0 4px;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+
+  cursor: cell;
+}
+
+.selectedCell {
+  border: 2px solid rgb(11, 138, 2);
+}

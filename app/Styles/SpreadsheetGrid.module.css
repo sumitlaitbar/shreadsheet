@@ -1,0 +1,4 @@
+.SpreadsheetGrid {
+  display: grid;
+  width: max-content;
+}

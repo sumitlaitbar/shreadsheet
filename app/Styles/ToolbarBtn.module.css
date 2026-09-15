@@ -1,0 +1,9 @@
+.ToolbarBtn {
+  border-radius: 3px;
+  padding: 0.3em;
+  border: 1px solid #f7f7f7;
+  background: white;
+}
+.ToolbarBtn:hover {
+  background: rgb(15, 223, 22);
+}
