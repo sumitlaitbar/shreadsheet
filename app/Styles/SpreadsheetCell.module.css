@@ -19,6 +19,8 @@
   text-overflow: clip;
 
   cursor: cell;
+
+  user-select: none;
 }
 
 .selectedCell {

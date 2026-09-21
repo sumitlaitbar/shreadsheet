@@ -17,9 +17,9 @@ const EditingCell = ({ cellData }: EditingCellProps) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [position, setPosition] = useState<DOMRect>();
+
   const key = editingCell ? `${editingCell.row}-${editingCell.column}` : "";
 
-  console.log("render grid");
   useEffect(() => {
     if (!selectedCell) return;
     const cell = document.getElementById(
@@ -51,23 +51,13 @@ const EditingCell = ({ cellData }: EditingCellProps) => {
 
   const SaveEditingCell = () => {
     if (!editingCell || !inputRef.current) return;
-    const Value = inputRef.current?.value;
-
-    console.log("SAVE VALUE", Value);
-    console.log("ROW=", editingCell.row);
-    console.log("ROW=", editingCell.column);
-
-    updateCell(
-      editingCell.row,
-      editingCell.column,
-      Value,
-      // inputRef.current?.value || "",
-    );
+    updateCell(editingCell.row, editingCell.column, inputRef.current.value);
   };
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCellValue(e.target.value);
-    console.log("DOM  input Value", inputRef.current?.value);
+
+    // console.log("DOM  input Value", inputRef.current?.value);
   }
 
   return editingCell ? (
@@ -89,6 +79,7 @@ const EditingCell = ({ cellData }: EditingCellProps) => {
         textOverflow: "clip",
         display: "flex",
         justifyContent: "flex-start",
+        userSelect: "none",
 
         fontWeight: cellData[key]?.style?.bold ? "bold" : "normal",
         backgroundColor: cellData[key]?.style?.backgroundColor || "white",

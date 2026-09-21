@@ -1,28 +1,20 @@
 "use client";
 
-import React, { useContext } from "react";
-import SpreadsheetCell from "./SpreadsheetCell";
-import {
-  Cell,
-  SelectedCell,
-  SpreadsheetActionContext,
-} from "../Context/SpreadsheetContext";
-import CellSelection from "./CellSelection";
+import React from "react";
+import { Cell, SelectedCell } from "../Context/SpreadsheetContext";
+import CellController from "./CellController";
 
 interface GridProps {
   rows: number;
   columns: number;
-  // cellData: Record<string, Cell>;
   setEditingCell: (cell: SelectedCell | null) => void;
   setSelectedCell: (cell: SelectedCell | null) => void;
-
   getCellData: (row: number, column: number) => Cell;
 }
 
 const Grid = ({
   rows,
   columns,
-  // cellData,
   setEditingCell,
   setSelectedCell,
   getCellData,
@@ -105,11 +97,10 @@ const Grid = ({
       {Array.from({ length: rows }).map((_, r_i) => {
         return Array.from({ length: columns }).map((_, c_i) => {
           return (
-            <SpreadsheetCell
+            <CellController
               key={`${r_i}-${c_i}`}
               row={r_i}
               column={c_i}
-              // cell={cellData[`${r_i}-${c_i}`]}
               setEditingCell={setEditingCell}
               setSelectedCell={setSelectedCell}
               getCellData={getCellData}

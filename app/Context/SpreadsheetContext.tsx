@@ -4,12 +4,12 @@ import * as XLSX from "xlsx-js-style";
 import React, {
   createContext,
   SetStateAction,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { useCallback } from "react";
-
 export interface CellStyle {
   bold?: boolean;
   backgroundColor?: string;
@@ -34,141 +34,82 @@ export interface SelectionRef {
   endColumn: number;
 }
 
-export const useCellData = (cellData: Record<string, Cell>) => {
-  const getCellData = useCallback(
-    (row: number, column: number) => {
-      const key = createKey(row, column);
-
-      return cellData[key] || EmptyCell;
-    },
-    [cellData],
-  );
-
-  return getCellData;
-};
-
-function createKey(row: number, column: number) {
+export function createKey(row: number, column: number) {
   return `${row}-${column}`;
 }
 
-function getCellNumber(
-  cellData: Record<string, Cell>,
-  row: number,
-  column: number,
-) {
-  const key = createKey(row, column);
-
-  return Number(cellData[key]?.value || 0);
-}
+// export const useCellData = (cellData: Record<string, Cell>) => {
+//   const getCellData = useCallback(
+//     (row: number, column: number) =>
+//       cellData[createKey(row, column)] || EmptyCell,
+//     [cellData],
+//   );
+//   return getCellData;
+// };
 
 function getRangeValues(
   cellData: Record<string, Cell>,
   startRow: number,
   endRow: number,
-  column: number,
+  startColumn: number,
+  endColumn: number,
 ) {
   const values: number[] = [];
 
   for (let row = startRow; row <= endRow; row++) {
-    values.push(getCellNumber(cellData, row, column));
+    for (let column = startColumn; column <= endColumn; column++) {
+      const key = createKey(row, column);
+      const value = Number(cellData[key]?.value);
+
+      if (!Number.isNaN(value)) {
+        values.push(value);
+      }
+    }
   }
 
   return values;
 }
 
-function sum(values: number[]) {
-  let total = 0;
-
-  for (const value of values) {
-    total += value;
-  }
-
-  return total;
-}
-
-function average(values: number[]) {
-  if (values.length === 0) {
-    return 0;
-  }
-
-  return sum(values) / values.length;
-}
-
 function calculateFormula(formula: string, cellData: Record<string, Cell>) {
-  if (formula.startsWith("=SUM(") && formula.endsWith(")")) {
-    const range = formula.slice(5, -1);
-    const [start, end] = range.split(":");
+  if (!formula.startsWith("=")) return 0;
 
-    if (!start || !end) {
-      return 0;
-    }
+  const type = formula.startsWith("=SUM(")
+    ? "SUM"
+    : formula.startsWith("=AVG(")
+      ? "AVG"
+      : "";
 
-    const startColumn = start.charCodeAt(0) - "A".charCodeAt(0);
-    const startRow = Number(start.slice(1)) - 1;
-    const endColumn = end.charCodeAt(0) - "A".charCodeAt(0);
-    const endRow = Number(end.slice(1)) - 1;
+  if (!type) return 0;
 
-    if (
-      Number.isNaN(startRow) ||
-      Number.isNaN(endRow) ||
-      Number.isNaN(startColumn) ||
-      Number.isNaN(endColumn)
-    ) {
-      return 0;
-    }
+  const range = formula.slice(5, -1);
 
-    const values: number[] = [];
+  const [start, end] = range.split(":");
 
-    for (let row = startRow; row <= endRow; row++) {
-      for (let column = startColumn; column <= endColumn; column++) {
-        const key = createKey(row, column);
-        const value = Number(cellData[key]?.value);
+  if (!start || !end) return 0;
 
-        if (!Number.isNaN(value)) {
-          values.push(value);
-        }
-      }
-    }
+  const startColumn = start.charCodeAt(0) - "A".charCodeAt(0);
 
-    return sum(values);
+  const endColumn = end.charCodeAt(0) - "A".charCodeAt(0);
+
+  const startRow = Number(start.slice(1)) - 1;
+  const endRow = Number(end.slice(1)) - 1;
+
+  const values = getRangeValues(
+    cellData,
+    Math.min(startRow, endRow),
+    Math.max(startRow, endRow),
+    Math.min(startColumn, endColumn),
+    Math.max(startColumn, endColumn),
+  );
+
+  if (type === "SUM") {
+    return values.reduce((total, value) => total + value, 0);
   }
 
-  if (formula.startsWith("=AVG(") && formula.endsWith(")")) {
-    const range = formula.slice(5, -1);
-    const [start, end] = range.split(":");
-
-    if (!start || !end) {
-      return 0;
-    }
-
-    const startColumn = start.charCodeAt(0) - "A".charCodeAt(0);
-    const startRow = Number(start.slice(1)) - 1;
-    const endColumn = end.charCodeAt(0) - "A".charCodeAt(0);
-    const endRow = Number(end.slice(1)) - 1;
-
-    if (
-      Number.isNaN(startRow) ||
-      Number.isNaN(endRow) ||
-      Number.isNaN(startColumn) ||
-      Number.isNaN(endColumn)
-    ) {
-      return 0;
-    }
-
-    const values: number[] = [];
-
-    for (let row = startRow; row <= endRow; row++) {
-      for (let column = startColumn; column <= endColumn; column++) {
-        const key = createKey(row, column);
-        const value = Number(cellData[key]?.value);
-
-        if (!Number.isNaN(value)) {
-          values.push(value);
-        }
-      }
-    }
-
-    return average(values);
+  if (type === "AVG") {
+    return values.length
+      ? values.reduce((total, value) => total + value, 0) / values.length
+      : 0;
   }
 
   return 0;
@@ -208,6 +149,8 @@ interface SpreadsheetActionContextType {
   stopSelection: () => void;
 
   setSelection: React.Dispatch<SetStateAction<number>>;
+
+  getCellData: (row: number, column: number) => Cell;
 }
 
 export const SpreadsheetContext = createContext<SpreadsheetContextType | null>(
@@ -221,21 +164,32 @@ interface SpreadsheetContextProviderProps {
   children: React.ReactNode;
 }
 
-const EmptyCell: Cell = {
-  value: "",
-};
+const EmptyCell: Cell = { value: "" };
 
 export const SpreadsheetContextProvider = ({
   children,
 }: SpreadsheetContextProviderProps) => {
-  const [rows, setRows] = useState(15);
+  const [rows, setRows] = useState(10);
   const [columns, setColumns] = useState(10);
   const [selectedCell, setSelected] = useState<SelectedCell | null>(null);
   const [editingCell, setEditing] = useState<SelectedCell | null>(null);
+
   const [cellData, setCellData] = useState<Record<string, Cell>>({});
   const [copiedCells, setCopiedCells] = useState<Cell[][]>([]);
+
+  const cellDataRef = useRef<Record<string, Cell>>({});
+  const copiedCellsRef = useRef<Cell[][]>([]);
+
   const cellValueRef = useRef("");
   const [selection, setSelection] = useState(0);
+
+  useEffect(() => {
+    cellDataRef.current = cellData;
+  }, [cellData]);
+
+  const getCellData = useCallback((row: number, column: number) => {
+    return cellDataRef.current[createKey(row, column)] || EmptyCell;
+  }, []);
 
   const selectionRef = useRef<SelectionRef>({
     selecting: false,
@@ -247,13 +201,10 @@ export const SpreadsheetContextProvider = ({
 
   const startSelection = useCallback((row: number, column: number) => {
     selectionRef.current.selecting = true;
-
     selectionRef.current.startRow = row;
     selectionRef.current.startColumn = column;
     selectionRef.current.endRow = row;
     selectionRef.current.endColumn = column;
-
-    setSelection((prev) => prev + 1);
   }, []);
 
   const updateSelection = useCallback((row: number, column: number) => {
@@ -263,8 +214,6 @@ export const SpreadsheetContextProvider = ({
 
     selectionRef.current.endRow = row;
     selectionRef.current.endColumn = column;
-
-    setSelection((prev) => prev + 1);
   }, []);
 
   const stopSelection = useCallback(() => {
@@ -316,7 +265,6 @@ export const SpreadsheetContextProvider = ({
       const key = createKey(row, column);
 
       setCellData((prev) => {
-        let updatedData;
         if (value.startsWith("=")) {
           const calculatedValue = calculateFormula(value, prev);
 
@@ -326,10 +274,7 @@ export const SpreadsheetContextProvider = ({
             formula: value,
           };
 
-          updatedData = {
-            ...prev,
-            [key]: updatedCell,
-          };
+          prev[key] = updatedCell;
         } else {
           const updatedCell = {
             ...prev[key],
@@ -337,26 +282,25 @@ export const SpreadsheetContextProvider = ({
             formula: undefined,
           };
 
-          updatedData = {
-            ...prev,
-            [key]: updatedCell,
-          };
+          prev[key] = updatedCell;
         }
 
-        Object.entries(updatedData).forEach(([cellKey, cell]) => {
-          if (cell.formula) {
-            const calculatedValue = calculateFormula(cell.formula, updatedData);
+        Object.entries(prev).forEach(([cellKey, cell]) => {
+          if (!cell.formula) return;
 
-            if (cell.value !== String(calculatedValue)) {
-              updatedData[cellKey] = {
-                ...cell,
-                value: String(calculatedValue),
-              };
-            }
+          const calculatedValue = calculateFormula(cell.formula, prev);
+
+          const newValue = String(calculatedValue);
+
+          if (cell.value !== newValue) {
+            prev[cellKey] = {
+              ...cell,
+              value: newValue,
+            };
           }
         });
 
-        return updatedData;
+        return prev;
       });
     },
     [],
@@ -364,68 +308,52 @@ export const SpreadsheetContextProvider = ({
 
   const handleTextbold = useCallback(() => {
     const { startRow, startColumn, endRow, endColumn } = selectionRef.current;
-
     const minRow = Math.min(startRow, endRow);
     const maxRow = Math.max(startRow, endRow);
     const minColumn = Math.min(startColumn, endColumn);
     const maxColumn = Math.max(startColumn, endColumn);
 
     setCellData((prev) => {
-      const updatedData = {
-        ...prev,
-      };
-
+      const updatedData = { ...prev };
       for (let row = minRow; row <= maxRow; row++) {
         for (let column = minColumn; column <= maxColumn; column++) {
           const key = createKey(row, column);
-
-          const oldCell = updatedData[key];
-
           updatedData[key] = {
-            ...oldCell,
-            value: oldCell?.value || "",
+            ...prev[key],
+            value: prev[key]?.value || "",
             style: {
-              ...oldCell?.style,
-              bold: !oldCell?.style?.bold,
+              ...prev[key]?.style,
+              bold: !prev[key]?.style?.bold,
             },
           };
         }
       }
-
       return updatedData;
     });
   }, []);
-
   const handleBgcolor = useCallback((color: string) => {
     const { startRow, startColumn, endRow, endColumn } = selectionRef.current;
-
     const minRow = Math.min(startRow, endRow);
     const maxRow = Math.max(startRow, endRow);
     const minColumn = Math.min(startColumn, endColumn);
     const maxColumn = Math.max(startColumn, endColumn);
 
     setCellData((prev) => {
-      const updatedData = {
-        ...prev,
-      };
-
+      const updatedData = { ...prev };
       for (let row = minRow; row <= maxRow; row++) {
         for (let column = minColumn; column <= maxColumn; column++) {
           const key = createKey(row, column);
 
-          const oldCell = updatedData[key];
-
           updatedData[key] = {
-            ...oldCell,
-            value: oldCell?.value || "",
+            ...prev[key],
+            value: prev[key]?.value || "",
             style: {
-              ...oldCell?.style,
+              ...prev[key]?.style,
               backgroundColor: color,
             },
           };
         }
       }
-
       return updatedData;
     });
   }, []);
@@ -439,15 +367,13 @@ export const SpreadsheetContextProvider = ({
     const maxColumn = Math.max(startColumn, endColumn);
 
     const copied: Cell[][] = [];
+    const currentCellData = cellDataRef.current;
 
     for (let row = minRow; row <= maxRow; row++) {
       const rowData: Cell[] = [];
-
       for (let column = minColumn; column <= maxColumn; column++) {
         const key = createKey(row, column);
-
-        const cell = cellData[key] || EmptyCell;
-
+        const cell = currentCellData[key] || EmptyCell;
         rowData.push({
           ...cell,
           style: cell.style
@@ -460,25 +386,22 @@ export const SpreadsheetContextProvider = ({
 
       copied.push(rowData);
     }
-
+    copiedCellsRef.current = copied;
     setCopiedCells(copied);
-
-    console.log("Copied range:", copied);
-  }, [cellData]);
+  }, []);
 
   const handlePaste = useCallback(() => {
-    if (copiedCells.length === 0) {
+    const currentCopiedCells = copiedCellsRef.current;
+    if (currentCopiedCells.length === 0) {
       return;
     }
 
     const { startRow, startColumn } = selectionRef.current;
 
     setCellData((prev) => {
-      const updatedData = {
-        ...prev,
-      };
+      const updatedData = { ...prev };
 
-      copiedCells.forEach((rowData, rowIndex) => {
+      currentCopiedCells.forEach((rowData, rowIndex) => {
         rowData.forEach((cell, columnIndex) => {
           const targetRow = startRow + rowIndex;
           const targetColumn = startColumn + columnIndex;
@@ -497,7 +420,7 @@ export const SpreadsheetContextProvider = ({
 
       return updatedData;
     });
-  }, [copiedCells]);
+  }, []);
 
   const createExcelData = useCallback((data: Record<string, Cell>) => {
     const excelData: string[][] = [];
@@ -559,7 +482,9 @@ export const SpreadsheetContextProvider = ({
   const handleSave = useCallback(() => {
     const filename = "sheet";
 
-    const excelData = createExcelData(cellData);
+    const currentCellData = cellDataRef.current;
+
+    const excelData = createExcelData(currentCellData);
 
     const blob = new Blob([excelData], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -573,18 +498,18 @@ export const SpreadsheetContextProvider = ({
     link.click();
 
     URL.revokeObjectURL(url);
-  }, [cellData, createExcelData]);
+  }, [createExcelData]);
 
   const values = useMemo(
     () => ({
       rows,
       columns,
-      cellData,
       selectedCell,
       editingCell,
       selection,
+      cellData,
     }),
-    [rows, columns, cellData, selectedCell, editingCell, selection],
+    [rows, columns, selectedCell, editingCell, selection, cellData],
   );
 
   const action = useMemo(
@@ -606,6 +531,7 @@ export const SpreadsheetContextProvider = ({
       updateSelection,
       stopSelection,
       setSelection,
+      getCellData,
     }),
     [
       setSelectedCell,
@@ -625,6 +551,7 @@ export const SpreadsheetContextProvider = ({
       updateSelection,
       stopSelection,
       setSelection,
+      getCellData,
     ],
   );
 

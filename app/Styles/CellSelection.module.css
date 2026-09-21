@@ -1,0 +1,9 @@
+.CellSelection {
+  background-color: rgba(0, 128, 0, 0.12);
+
+  /* position: absolute;
+  border: 2px solid green;
+  background: rgba(0, 128, 0, 0.12);
+  box-sizing: border-box;
+  pointer-events: none; */
+}

@@ -6,30 +6,27 @@ import {
   Cell,
   SelectedCell,
   SpreadsheetActionContext,
-  SpreadsheetContext,
 } from "../Context/SpreadsheetContext";
 
 interface SpreadsheetCellProps {
   row: number;
   column: number;
-  cell?: Cell;
   setSelectedCell: (Cell: SelectedCell | null) => void;
   setEditingCell: (Cell: SelectedCell | null) => void;
   getCellData: (row: number, column: number) => Cell;
+  cellValue: Cell;
+  // cellValues: string;
 }
 
 const SpreadsheetCell = ({
   row,
   column,
-  // cell,
   setSelectedCell,
   setEditingCell,
   getCellData,
+  cellValue,
 }: SpreadsheetCellProps) => {
   const cell = getCellData(row, column);
-
-  console.log("render cell", row, column);
-  console.log("cell", cell?.value);
 
   const {
     startSelection,
@@ -39,14 +36,14 @@ const SpreadsheetCell = ({
     setSelection,
   } = useContext(SpreadsheetActionContext)!;
 
-  const { startRow, startColumn } = selectionRef.current;
-  const { selection } = useContext(SpreadsheetContext)!;
+  console.log("cellvalue", cell);
 
   const hanldePointerDown = () => {
-    console.log("row-columns", row, column);
-
     startSelection(row, column);
     setSelection((selection) => selection + 1);
+
+    const firstCell = document.getElementById(`cell${row}-${column}`);
+    firstCell?.classList.remove(styles.CellSelection);
   };
 
   const hanldePointerMove = () => {
@@ -69,7 +66,6 @@ const SpreadsheetCell = ({
     <div
       className={styles.SpreadsheetCell}
       id={`cell${row}-${column}`}
-      // key={`cell${row}-${column}`}
       onDoubleClick={() => {
         setSelectedCell({ row, column });
         setEditingCell({ row, column });
@@ -84,15 +80,15 @@ const SpreadsheetCell = ({
         setSelectedCell({ row, column });
         setEditingCell(null);
       }}
+      onPointerDown={hanldePointerDown}
+      onPointerMove={hanldePointerMove}
+      onPointerUp={hanldePointerUp}
       style={{
         fontWeight: cell?.style?.bold ? "bold" : "normal",
         backgroundColor: cell?.style?.backgroundColor || "white",
       }}
-      onPointerDown={hanldePointerDown}
-      onPointerMove={hanldePointerMove}
-      onPointerUp={hanldePointerUp}
     >
-      {cell?.value}
+      {cellValue.value}
     </div>
   );
 };

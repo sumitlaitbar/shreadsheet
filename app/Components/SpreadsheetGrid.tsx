@@ -6,20 +6,22 @@ import Grid from "./Grid";
 import {
   SpreadsheetActionContext,
   SpreadsheetContext,
-  useCellData,
+  // useCellData,
 } from "../Context/SpreadsheetContext";
 import EditingCell from "./EditingCell";
 import CellSelection from "./CellSelection";
 
 const SpreadsheetGrid = () => {
-  console.log("render spreadsheet grid render");
-
   const { rows, columns, cellData } = useContext(SpreadsheetContext)!;
-  const getCellData = useCellData(cellData);
+
+  // const getCellData = useCellData(cellData);
+
+  const { getCellData } = useContext(SpreadsheetActionContext)!;
 
   const { setEditingCell, setSelectedCell } = useContext(
     SpreadsheetActionContext,
   )!;
+
   return (
     <div
       className={style.SpreadsheetGrid}
@@ -31,7 +33,6 @@ const SpreadsheetGrid = () => {
       <Grid
         rows={rows}
         columns={columns}
-        // cellData={cellData}
         setEditingCell={setEditingCell}
         setSelectedCell={setSelectedCell}
         getCellData={getCellData}
