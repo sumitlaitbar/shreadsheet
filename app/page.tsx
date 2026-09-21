@@ -23,8 +23,6 @@ const Spreadsheet = memo(function Spreadsheet() {
 });
 
 const SpreadsheetContent = memo(function SpreadsheetContent() {
-  console.log("spreadsheet content render");
-
   const { updateCell, setEditingCell, getValue } = useContext(
     SpreadsheetActionContext,
   )!;
@@ -34,7 +32,6 @@ const SpreadsheetContent = memo(function SpreadsheetContent() {
   const handleScroll = () => {
     if (!selectedCell || !editingCell) return;
     updateCell(selectedCell?.row, selectedCell?.column, getValue());
-    console.log("getvlaue", getValue());
     setEditingCell(null);
   };
 
