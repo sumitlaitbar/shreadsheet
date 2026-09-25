@@ -3,6 +3,7 @@
 import React from "react";
 import { Cell, SelectedCell } from "../Context/SpreadsheetContext";
 import CellController from "./CellController";
+// import EditingCell from "./EditingCell";
 
 interface GridProps {
   rows: number;

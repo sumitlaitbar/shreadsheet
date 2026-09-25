@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useRef } from "react";
 
 import Image from "next/image";
 import styles from "./Styles/Spreadsheet.module.css";
@@ -23,16 +23,73 @@ const Spreadsheet = memo(function Spreadsheet() {
 });
 
 const SpreadsheetContent = memo(function SpreadsheetContent() {
-  const { updateCell, setEditingCell, getValue } = useContext(
-    SpreadsheetActionContext,
-  )!;
+  const {
+    updateCell,
+    setEditingCell,
+    getValue,
+    addRows,
+    addColumns,
+    handleCopy,
+    handlePaste,
+    handleTextbold,
+    handleItalic,
+    handleSave,
+    handleCleardata,
+  } = useContext(SpreadsheetActionContext)!;
 
-  const { selectedCell, editingCell } = useContext(SpreadsheetContext)!;
+  const { editingCell } = useContext(SpreadsheetContext)!;
+
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
-    if (!selectedCell || !editingCell) return;
-    updateCell(selectedCell?.row, selectedCell?.column, getValue());
-    setEditingCell(null);
+    const gridelement = gridRef.current;
+    if (!gridelement) return;
+    if (
+      gridelement.scrollTop + gridelement.clientHeight >=
+      gridelement.scrollHeight - 100
+    ) {
+      addRows();
+    }
+
+    if (
+      gridelement.scrollLeft + gridelement.clientWidth >=
+      gridelement.scrollWidth - 100
+    ) {
+      addColumns();
+    }
+
+    if (editingCell) {
+      const value = getValue();
+      updateCell(editingCell?.row, editingCell?.column, value);
+      setEditingCell(null);
+    }
+  };
+
+  const handleKeydown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.ctrlKey && e.key.toLowerCase() === "c") {
+      e.preventDefault();
+      handleCopy();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "v") {
+      e.preventDefault();
+      handlePaste();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "b") {
+      e.preventDefault();
+      handleTextbold();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      handleSave();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "i") {
+      e.preventDefault();
+      handleItalic();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "d") {
+      e.preventDefault();
+      handleCleardata();
+    }
   };
 
   return (
@@ -41,7 +98,13 @@ const SpreadsheetContent = memo(function SpreadsheetContent() {
         <Spreadsheet />
         <SpreadsheetToolbar />
       </header>
-      <main className={styles.gridContainer} onScroll={handleScroll}>
+      <main
+        className={styles.gridContainer}
+        ref={gridRef}
+        tabIndex={0}
+        onScroll={handleScroll}
+        onKeyDown={handleKeydown}
+      >
         <SpreadsheetGrid />
       </main>
     </div>

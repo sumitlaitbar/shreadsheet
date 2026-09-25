@@ -10,7 +10,6 @@ interface CellSiblingProps {
   row: number;
   column: number;
   setCellValue: React.Dispatch<React.SetStateAction<Cell>>;
-  // setCellValues: React.Dispatch<React.SetStateAction<string>>;
 }
 const EmptyCell: Cell = { value: "" };
 

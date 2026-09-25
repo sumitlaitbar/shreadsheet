@@ -20,8 +20,6 @@ const CellController = ({
   setSelectedCell,
   getCellData,
 }: CellControllerProps) => {
-  // const [cellValues, setCellValues] = useState("");
-
   const [cellValue, setCellValue] = useState<Cell>(getCellData(row, column));
 
   return (
@@ -31,17 +29,10 @@ const CellController = ({
         column={column}
         setEditingCell={setEditingCell}
         setSelectedCell={setSelectedCell}
-        getCellData={getCellData}
         cellValue={cellValue}
-        // cellValues={cellValues}
       />
 
-      <CellSibling
-        row={row}
-        column={column}
-        // setCell={setCell}
-        setCellValue={setCellValue}
-      />
+      <CellSibling row={row} column={column} setCellValue={setCellValue} />
     </>
   );
 };

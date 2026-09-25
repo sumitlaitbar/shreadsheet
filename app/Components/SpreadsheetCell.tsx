@@ -13,9 +13,8 @@ interface SpreadsheetCellProps {
   column: number;
   setSelectedCell: (Cell: SelectedCell | null) => void;
   setEditingCell: (Cell: SelectedCell | null) => void;
-  getCellData: (row: number, column: number) => Cell;
+  // getCellData: (row: number, column: number) => Cell;
   cellValue: Cell;
-  // cellValues: string;
 }
 
 const SpreadsheetCell = ({
@@ -23,10 +22,9 @@ const SpreadsheetCell = ({
   column,
   setSelectedCell,
   setEditingCell,
-  getCellData,
   cellValue,
 }: SpreadsheetCellProps) => {
-  const cell = getCellData(row, column);
+  const cell = cellValue;
 
   const {
     startSelection,
@@ -36,14 +34,9 @@ const SpreadsheetCell = ({
     setSelection,
   } = useContext(SpreadsheetActionContext)!;
 
-  console.log("cellvalue", cell);
-
   const hanldePointerDown = () => {
     startSelection(row, column);
     setSelection((selection) => selection + 1);
-
-    const firstCell = document.getElementById(`cell${row}-${column}`);
-    firstCell?.classList.remove(styles.CellSelection);
   };
 
   const hanldePointerMove = () => {
@@ -54,7 +47,6 @@ const SpreadsheetCell = ({
       .querySelector(`.${styles.selectedCell}`)
       ?.classList.remove(styles.selectedCell);
 
-    setEditingCell(null);
     updateSelection(row, column);
   };
 
@@ -86,9 +78,21 @@ const SpreadsheetCell = ({
       style={{
         fontWeight: cell?.style?.bold ? "bold" : "normal",
         backgroundColor: cell?.style?.backgroundColor || "white",
+        fontStyle: cell?.style?.italic ? "italic" : "normal",
+        color: cell?.style?.color ?? "black",
+        fontSize: cell?.style?.Fontsize ?? "14px",
+        fontFamily: cell?.style?.Fontfamily ?? "Arial, Helvetica, sans-serif",
+        textAlign: cell?.style?.align ?? "left",
+        textDecorationLine: cell?.style?.Textunderline ? "underline" : "none",
+        justifyContent:
+          cell?.style?.align === "center"
+            ? "center"
+            : cell?.style?.align === "right"
+              ? "flex-end"
+              : "flex-start",
       }}
     >
-      {cellValue.value}
+      {cell?.value}
     </div>
   );
 };

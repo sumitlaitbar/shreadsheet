@@ -1,0 +1,56 @@
+.popupoverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+}
+
+.popup {
+  height: 190px;
+  width: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.3);
+}
+.popupcontent1 {
+  padding: 15px 15px;
+}
+.popupcontent2 {
+  padding-top: 15px;
+}
+.popupbuttons {
+  display: flex;
+  gap: 20px;
+  padding: 15px 30px;
+  justify-content: flex-end !important;
+  align-items: flex-end !important;
+}
+
+.deletebtn {
+  border-radius: 18px;
+  border: 2px solid red;
+  background-color: red;
+  color: white;
+  padding: 0.6em;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.deletebtn:hover {
+  background-color: brown;
+  border: 2px solid brown;
+}
+.cancelbtn {
+  border-radius: 18px;
+  border: 2px solid rgb(232, 230, 230);
+  padding: 0.6em;
+  font-weight: bold;
+  font-size: 0.9rem;
+  background-color: white;
+}
+.cancelbtn:hover {
+  background-color: rgb(223, 223, 223);
+}
