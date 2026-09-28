@@ -1,0 +1,369 @@
+/* .loginpage {
+  display: flex;
+  min-height: 100vh;
+}
+.leftsection {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  background: #008000;
+}
+.rightsection {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.loginbtns {
+  padding-top: 25px;
+}
+.loginbtn {
+  background: green;
+  color: white;
+  padding: 0.8em;
+  border: 2px solid green;
+  border-radius: 10px;
+  width: 250px;
+  font-weight: bold;
+}
+
+.loginbtn:hover {
+  background-color: rgb(50, 227, 50);
+}
+.logincontent {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+}
+.logininput {
+  gap: 10px;
+  padding-top: 25px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  padding: 0.8em;
+  border: 1px solid rgb(153, 153, 153);
+  border-radius: 5px;
+}
+.logininputs {
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 50%;
+} */
+
+.loginpage {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: white;
+}
+
+.leftsection {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #008000, #006b2d);
+  color: white;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.leftcontent {
+  max-width: 500px;
+  text-align: center;
+  animation: fadeUp 0.8s ease;
+}
+
+.excelbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.excelbadge:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.excelbadge span {
+  font-size: 20px;
+}
+
+.excelbadge p {
+  margin: 0;
+  font-size: 14px;
+  color: white;
+}
+
+.leftcontent h1 {
+  margin: 0 0 15px;
+  font-size: 38px;
+  font-weight: 700;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.leftcontent h1:hover {
+  transform: scale(1.03);
+}
+
+.tagline {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 500;
+  color: white;
+}
+
+.description {
+  display: block;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.datacard {
+  width: 320px;
+  margin: 35px auto 0;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+.datacard:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.cardheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.live {
+  font-size: 12px;
+  color: #d9ffd9;
+}
+
+.gridpreview {
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.gridrow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gridrow span {
+  padding: 8px 5px;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  color: #333;
+  font-size: 12px;
+  text-align: center;
+}
+
+.gridrow:first-child span {
+  background: #f1f1f1;
+  font-weight: 600;
+}
+
+@keyframes floatCard {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rightsection {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.logincontent {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logincontent h1 {
+  padding-top: 9px;
+  margin: 0;
+
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+}
+
+.logincontent p {
+  padding-top: 5px;
+  margin: 0;
+  color: #777;
+  font-size: 15px;
+}
+
+.logininputs {
+  width: 50%;
+  min-width: 280px;
+  max-width: 400px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+  padding-top: 25px;
+}
+
+.logininput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+
+  border: 1px solid #d1d1d1;
+  background-color: white;
+  border-radius: 8px;
+
+  outline: none;
+  font-size: 15px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.logininput:hover {
+  border-color: #999;
+}
+
+.logininput:focus {
+  border-color: #008000;
+  box-shadow: 0 0 0 3px rgba(0, 128, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.logininput::placeholder {
+  color: #999;
+}
+
+.loginbtns {
+  width: 50%;
+  min-width: 280px;
+  max-width: 400px;
+  padding-top: 25px;
+}
+
+.loginbtn {
+  width: 100%;
+
+  padding: 14px;
+  background-color: #008000;
+
+  color: white;
+  border: 2px solid #008000;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.loginbtn:hover {
+  background-color: #006b2d;
+  box-shadow: 0 6px 15px rgba(0, 128, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.loginbtn:active {
+  transform: translateY(0);
+  box-shadow: rgba(0, 128, 0, 0.12);
+}
+
+@media (max-width: 768px) {
+  .loginpage {
+    flex-direction: column;
+  }
+
+  .leftsection {
+    width: 100%;
+    min-height: 250px;
+  }
+
+  .rightsection {
+    width: 100%;
+    min-height: calc(100vh - 250px);
+
+    padding: 30px 20px;
+  }
+
+  .logininputs,
+  .loginbtns {
+    width: 90%;
+    min-width: 0;
+  }
+}

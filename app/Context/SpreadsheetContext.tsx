@@ -131,6 +131,7 @@ interface SpreadsheetContextType {
   clearDataPopUpp: boolean;
   isSavedPopup: boolean;
   isBack: boolean;
+  // headerStyle: boolean;
 }
 
 export interface SpreadsheetActionContextType {
@@ -176,6 +177,7 @@ export interface SpreadsheetActionContextType {
   setClearDataPopUp: React.Dispatch<SetStateAction<boolean>>;
   setIsSavedPopup: React.Dispatch<SetStateAction<boolean>>;
   setIsBack: React.Dispatch<SetStateAction<boolean>>;
+  // setHeaderStyle: React.Dispatch<SetStateAction<boolean>>;
   handleConfirmationDelete: () => void;
 }
 
@@ -212,6 +214,7 @@ export const SpreadsheetContextProvider = ({
   const [clearDataPopUpp, setClearDataPopUp] = useState(false);
   const [isSavedPopup, setIsSavedPopup] = useState(false);
   const [isBack, setIsBack] = useState(false);
+  // const [headerStyle, setHeaderStyle] = useState(false);
 
   useEffect(() => {
     cellDataRef.current = cellData;

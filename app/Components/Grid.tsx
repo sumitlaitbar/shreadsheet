@@ -3,7 +3,6 @@
 import React from "react";
 import { Cell, SelectedCell } from "../Context/SpreadsheetContext";
 import CellController from "./CellController";
-// import EditingCell from "./EditingCell";
 
 interface GridProps {
   rows: number;
@@ -34,7 +33,7 @@ const Grid = ({
   return (
     <>
       <div
-        key={`corner-${rows}-${columns}`}
+        id="cornercell"
         style={{
           width: "40px",
           border: "1px solid #a4a4a4",
@@ -47,54 +46,57 @@ const Grid = ({
           zIndex: "50",
         }}
       ></div>
-      {Array.from({ length: columns }).map((_, c_i) => (
-        <div
-          key={`column-header-${c_i}`}
-          style={{
-            width: "150px",
-            border: "1px solid #a4a4a4",
-            height: "35px",
-            gridColumn: c_i + 2,
-            gridRow: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-
-            background: "#d7d7d7",
-
-            position: "sticky",
-            top: "0px",
-            zIndex: "10",
-          }}
-        >
-          {getColumnName(c_i + 1)}
-        </div>
-      ))}
-      {Array.from({ length: rows }).map((_, r_i) => (
-        <div
-          key={`row-header-${r_i}`}
-          style={{
-            width: "40px",
-            border: "1px solid #a4a4a4",
-            height: "35px",
-            gridColumn: 1,
-            gridRow: r_i + 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            paddingLeft: "0px",
-            background: "#d7d7d7",
-
-            position: "sticky",
-            left: "0px",
-            zIndex: "20",
-          }}
-        >
-          {r_i + 1}
-        </div>
-      ))}
+      {Array.from({ length: columns }).map((_, c_i) => {
+        return (
+          <div
+            key={`column-header-${c_i}`}
+            id={`column-header-${c_i}`}
+            style={{
+              width: "150px",
+              border: "1px solid #a4a4a4",
+              height: "35px",
+              gridColumn: c_i + 2,
+              gridRow: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              background: "#d7d7d7",
+              position: "sticky",
+              top: "0px",
+              zIndex: "10",
+            }}
+          >
+            {getColumnName(c_i + 1)}
+          </div>
+        );
+      })}
+      {Array.from({ length: rows }).map((_, r_i) => {
+        return (
+          <div
+            key={`row-header-${r_i}`}
+            id={`row-header-${r_i}`}
+            style={{
+              width: "40px",
+              border: "1px solid #a4a4a4",
+              height: "35px",
+              gridColumn: 1,
+              gridRow: r_i + 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              paddingLeft: "0px",
+              background: "#d7d7d7",
+              position: "sticky",
+              left: "0px",
+              zIndex: "20",
+            }}
+          >
+            {r_i + 1}
+          </div>
+        );
+      })}
       {Array.from({ length: rows }).map((_, r_i) => {
         return Array.from({ length: columns }).map((_, c_i) => {
           return (
