@@ -6,22 +6,19 @@ import Grid from "./Grid";
 import {
   SpreadsheetActionContext,
   SpreadsheetContext,
-  // useCellData,
 } from "../Context/SpreadsheetContext";
 import EditingCell from "./EditingCell";
 import CellSelection from "./CellSelection";
+import PermissionPopup from "./PermissionPopup";
+import PermissionPopupSavedata from "./PermissionPopupSavedata";
+import PermissionPopupLeavesite from "./PermissionPopupLeavesite";
 
 const SpreadsheetGrid = () => {
   const { rows, columns, cellData } = useContext(SpreadsheetContext)!;
-
-  // const getCellData = useCellData(cellData);
-
   const { getCellData } = useContext(SpreadsheetActionContext)!;
-
   const { setEditingCell, setSelectedCell } = useContext(
     SpreadsheetActionContext,
   )!;
-
   return (
     <div
       className={style.SpreadsheetGrid}
@@ -39,6 +36,9 @@ const SpreadsheetGrid = () => {
       />
       <EditingCell cellData={cellData} />
       <CellSelection />
+      <PermissionPopup />
+      <PermissionPopupSavedata />
+      <PermissionPopupLeavesite />
     </div>
   );
 };

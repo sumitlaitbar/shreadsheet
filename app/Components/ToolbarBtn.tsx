@@ -6,12 +6,13 @@ interface props {
   children: React.ReactNode;
   onClick?: () => void;
   onChange?: () => void;
+  className?: string;
 }
-const ToolbarBtn = ({ children, onClick, onChange }: props) => {
+const ToolbarBtn = ({ children, onClick, onChange, className }: props) => {
   return (
     <div>
       <button
-        className={styles.ToolbarBtn}
+        className={`${styles.ToolbarBtn} ${className ?? ""}`}
         onClick={onClick}
         onChange={onChange}
       >
