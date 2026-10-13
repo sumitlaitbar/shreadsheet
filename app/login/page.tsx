@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import style from "../Styles/LoginPage.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -10,27 +10,61 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-    if (username && password) {
-      router.replace("/spreadsheet");
+  // useEffect(() => {
+  //   const username = localStorage.getItem("username");
+  //   const password = localStorage.getItem("password");
+  //   if (username && password) {
+  //     router.replace("/spreadsheet");
+  //   }
+  // }, [router]);
+
+  // const handleLogin = () => {
+  //   if (!email || !password) return;
+  //   localStorage.setItem("username", email);
+  //   localStorage.setItem("password", password);
+  //   router.replace("/spreadsheet");
+  // };
+
+  // const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setPassword(e.target.value);
+  // };
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("please enter valid email and password");
+      return;
     }
-  }, [router]);
 
-  const handleLogin = () => {
-    if (!email || !password) return;
-    localStorage.setItem("username", email);
-    localStorage.setItem("password", password);
-    router.replace("/spreadsheet");
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+      alert(data.message);
+
+      router.push("/spreadsheet");
+      
+    } catch (error) {
+      console.log(error);
+      alert("Something Went Wrong");
+    }
   };
 
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
   return (
     <div className={style.loginpage}>
       <div className={style.leftsection}>
@@ -101,7 +135,10 @@ const Login = () => {
             type="email"
             placeholder="Email address"
             value={email}
-            onChange={handleEmail}
+            // onChange={handleEmail}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
 
           <input
@@ -109,7 +146,10 @@ const Login = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={handlePassword}
+            // onChange={handlePassword}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
         </div>
 

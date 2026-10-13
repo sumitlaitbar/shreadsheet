@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useContext, useEffect, useRef } from "react";
+import React, { memo, useContext, useRef } from "react";
 
 import Image from "next/image";
 import styles from "../Styles/Spreadsheet.module.css";
@@ -13,7 +13,6 @@ import {
   SpreadsheetContextProvider,
 } from "../Context/SpreadsheetContext";
 import LogoutBtn from "../Components/LogoutBtn";
-import { useRouter } from "next/navigation";
 
 const SpreadsheetHeader = memo(function Spreadsheet() {
   return (
@@ -114,14 +113,14 @@ const SpreadsheetContent = memo(function SpreadsheetContent() {
 });
 
 const SpreadsheetHome = () => {
-  const router = useRouter();
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    const savedpassword = localStorage.getItem("password");
-    if (!username || !savedpassword) {
-      router.replace("/login");
-    }
-  }, [router]);
+  // const router = useRouter();
+  // useEffect(() => {
+  //   const username = localStorage.getItem("username");
+  //   const savedpassword = localStorage.getItem("password");
+  //   if (!username || !savedpassword) {
+  //     router.replace("/login");
+  //   }
+  // }, [router]);
 
   return (
     <SpreadsheetContextProvider>
