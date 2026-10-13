@@ -10,6 +10,7 @@ import React, {
   useState,
 } from "react";
 import { useCallback } from "react";
+import { saveSpreadsheetToDB } from "../utils/spreadsheet";
 
 export type TextAlign = "left" | "center" | "right";
 
@@ -221,32 +222,32 @@ export const SpreadsheetContextProvider = ({
   }, [cellData]);
 
   // this effect load the data means locol storage to react
-  useEffect(() => {
-    setTimeout(() => {
-      try {
-        const savedata = localStorage.getItem("spreadsheet-data");
-        if (savedata) {
-          setCellData(JSON.parse(savedata));
-        }
-      } catch (error) {
-        console.log("SpreadsheetData is not loaded :", error);
-      } finally {
-        setIsStorageloaded(true);
-      }
-    }, 10);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     try {
+  //       const savedata = localStorage.getItem("spreadsheet-data");
+  //       if (savedata) {
+  //         setCellData(JSON.parse(savedata));
+  //       }
+  //     } catch (error) {
+  //       console.log("SpreadsheetData is not loaded :", error);
+  //     } finally {
+  //       setIsStorageloaded(true);
+  //     }
+  //   }, 10);
+  // }, []);
 
   // this effect saves the key and value in locol storege
-  useEffect(() => {
-    setTimeout(() => {
-      try {
-        if (!isStorageloaded) return;
-        localStorage.setItem("spreadsheet-data", JSON.stringify(cellData));
-      } catch (error) {
-        console.log("SpreadsheetData is not saved :", error);
-      }
-    }, 10);
-  }, [cellData, isStorageloaded]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     try {
+  //       if (!isStorageloaded) return;
+  //       localStorage.setItem("spreadsheet-data", JSON.stringify(cellData));
+  //     } catch (error) {
+  //       console.log("SpreadsheetData is not saved :", error);
+  //     }
+  //   }, 10);
+  // }, [cellData, isStorageloaded]);
 
   const getCellData = useCallback((row: number, column: number) => {
     return cellDataRef.current[createKey(row, column)] || EmptyCell;
@@ -421,6 +422,7 @@ export const SpreadsheetContextProvider = ({
       });
 
       setIsSavedPopup(true);
+      setIsBack(true);
       console.log("update cell popup", isSavedPopup);
     },
     [],
@@ -784,11 +786,12 @@ export const SpreadsheetContextProvider = ({
     });
   }, []);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     try {
+      const currentCellData = cellDataRef.current;
+      await saveSpreadsheetToDB(currentCellData, " My Spreadsheet");
       setTimeout(() => {
         const filename = "sheet";
-        const currentCellData = cellDataRef.current;
 
         const excelData = createExcelData(currentCellData);
 
@@ -810,6 +813,7 @@ export const SpreadsheetContextProvider = ({
       setIsBack(false);
     } catch (error) {
       alert(error);
+      throw error;
     }
   }, [createExcelData]);
 
@@ -884,9 +888,6 @@ export const SpreadsheetContextProvider = ({
         0,
       );
       setColumns(Math.max(10, maxColumns));
-
-      // alert(`${file.name} loaded Successfully....`);
-      console.log("File loaded Successfully....");
     } catch (error) {
       console.log(
         "Failed to load file.Please select valid Excel file. ",
@@ -897,7 +898,6 @@ export const SpreadsheetContextProvider = ({
   }, []);
   const handleCleardata = useCallback(() => {
     setClearDataPopUp(true);
-    setIsBack(false);
   }, []);
   const handleConfirmationDelete = useCallback(() => {
     setCellData({});
@@ -916,6 +916,7 @@ export const SpreadsheetContextProvider = ({
       clearDataPopUpp,
       isSavedPopup,
       isBack,
+      cellDataRef,
     }),
     [
       rows,
@@ -927,6 +928,7 @@ export const SpreadsheetContextProvider = ({
       clearDataPopUpp,
       isSavedPopup,
       isBack,
+      cellDataRef,
     ],
   );
 

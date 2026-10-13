@@ -1,0 +1,404 @@
+/* .registerpage {
+  padding-top: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+.mainsection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.mainsection input {
+  padding: 0.5em;
+  width: 250px;
+  outline: none !important;
+  border: 1px solid rgb(240, 240, 240);
+  border-radius: 5px;
+}
+.mainsection input :focus {
+  border-color: #008000;
+  box-shadow: 0 0 0 3px rgba(0, 128, 0, 0.12);
+  transform: translateY(-1px);
+}
+input:hover {
+  border: 1px solid grey;
+}
+.registerBtn {
+  padding-top: 10px;
+}
+.registerBtn button {
+  border: 2px solid green;
+  padding: 0.5em;
+  color: white;
+  background: green;
+  border-radius: 15px;
+}
+button:hover {
+  background-color: darkgreen;
+  color: black;
+}
+.link {
+  padding-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.link span a {
+  text-decoration: none;
+} */
+
+.registerpage {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+  box-sizing: border-box;
+
+  /* Excel-like green workspace */
+  background: linear-gradient(135deg, #096c36 0%, #29dd7a 45%, #0a4f2f 100%);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* Excel-style grid background */
+.registerpage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+
+  background-size: 45px 45px;
+
+  animation: gridMove 12s linear infinite;
+
+  pointer-events: none;
+}
+
+/* Green floating Excel-style shape */
+.registerpage::after {
+  content: "";
+  position: absolute;
+
+  width: 450px;
+  height: 450px;
+
+  right: -180px;
+  bottom: -180px;
+
+  border: 70px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+
+  animation: rotateShape 15s linear infinite;
+
+  pointer-events: none;
+}
+
+/* ================================= */
+/* CREATE ACCOUNT CARD */
+/* ================================= */
+
+.mainsection {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 520px;
+
+  min-height: 550px;
+
+  padding: 55px 55px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  background: #ffffff;
+
+  border-radius: 8px;
+
+  border: 1px solid #d9d9d9;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Card hover */
+.mainsection:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+.mainsection h1 {
+  margin: 0 0 20px;
+
+  font-size: 34px;
+  font-weight: 600;
+
+  color: #217346;
+
+  letter-spacing: -0.5px;
+
+  text-align: center;
+}
+
+/* Small Excel line below heading */
+.mainsection h1::after {
+  content: "";
+
+  display: block;
+
+  width: 45px;
+  height: 3px;
+
+  margin: 12px auto 0;
+
+  background: #217346;
+
+  border-radius: 2px;
+
+  transition: width 0.3s ease;
+}
+
+.mainsection:hover h1::after {
+  width: 80px;
+}
+
+/* ================================= */
+/* INPUTS */
+/* ================================= */
+
+.mainsection input {
+  width: 100%;
+  height: 52px;
+
+  box-sizing: border-box;
+
+  padding: 12px 15px;
+
+  font-size: 16px;
+
+  color: #333;
+
+  background: #ffffff;
+
+  border: 1px solid #b7b7b7;
+
+  border-radius: 3px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* Placeholder */
+.mainsection input::placeholder {
+  color: #777;
+}
+
+/* Hover */
+.mainsection input:hover {
+  border-color: #217346;
+}
+
+/* Focus */
+.mainsection input:focus {
+  border-color: #217346;
+
+  background: #fafffc;
+
+  box-shadow: 0 0 0 1px #217346;
+}
+
+/* ================================= */
+/* REGISTER BUTTON */
+/* ================================= */
+
+.registerBtn {
+  width: 100%;
+
+  padding-top: 10px;
+
+  display: flex;
+  justify-content: center;
+}
+
+/* Excel green button */
+.registerBtn button {
+  width: 100%;
+  height: 50px;
+
+  padding: 12px 25px;
+
+  color: #ffffff;
+
+  background: #217346;
+
+  border: 1px solid #217346;
+
+  border-radius: 3px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Hover */
+.registerBtn button:hover {
+  background: #185c37;
+
+  box-shadow: 0 4px 10px rgba(33, 115, 70, 0.25);
+
+  transform: translateY(-2px);
+}
+
+/* Click */
+.registerBtn button:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* ================================= */
+/* LOGIN */
+/* ================================= */
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding-top: 10px;
+
+  font-size: 14px;
+
+  color: #666;
+}
+
+.link span a {
+  color: #217346;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.link span a:hover {
+  color: #185c37;
+
+  text-decoration: underline;
+}
+
+/* ================================= */
+/* BACKGROUND ANIMATION */
+/* ================================= */
+
+@keyframes gridMove {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 45px 45px;
+  }
+}
+
+@keyframes rotateShape {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================= */
+/* TABLET */
+/* ================================= */
+
+@media (max-width: 700px) {
+  .registerpage {
+    padding: 30px 20px;
+  }
+
+  .mainsection {
+    max-width: 480px;
+
+    min-height: 520px;
+
+    padding: 45px 35px;
+  }
+
+  .mainsection h1 {
+    font-size: 30px;
+  }
+}
+
+/* ================================= */
+/* MOBILE */
+/* ================================= */
+
+@media (max-width: 450px) {
+  .registerpage {
+    padding: 20px 15px;
+  }
+
+  .mainsection {
+    min-height: 500px;
+
+    padding: 35px 22px;
+
+    border-radius: 6px;
+  }
+
+  .mainsection h1 {
+    font-size: 27px;
+  }
+
+  .mainsection input {
+    height: 50px;
+  }
+
+  .registerBtn button {
+    height: 48px;
+  }
+
+  .link {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

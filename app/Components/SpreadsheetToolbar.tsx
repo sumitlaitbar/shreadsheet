@@ -1,7 +1,7 @@
 "use client";
 
 import ToolbarBtn from "./ToolbarBtn";
-import styles from "../Styles/SpreadsheetToolbar.module.css";
+import styles from ".../Styles/SpreadsheetToolbar.module.css";
 import React, { useContext, useEffect, useRef } from "react";
 import {
   Cell,
